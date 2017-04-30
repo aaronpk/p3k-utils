@@ -30,7 +30,7 @@ class CacheTest extends PHPUnit_Framework_TestCase {
 
   public function testGetExpired() {
     p3k\Cache::set('foo', 'bar', 1);
-    sleep(1);
+    usleep(1100000);
     $this->assertEquals('default', p3k\Cache::get('foo', 'default'));
   }
 
@@ -50,7 +50,7 @@ class CacheTest extends PHPUnit_Framework_TestCase {
     p3k\Cache::set('foo', 'bar', 600);
     $this->assertEquals('bar', p3k\Cache::get('foo'));
     p3k\Cache::expire('foo', 1);
-    sleep(1);
+    usleep(1100000);
     $this->assertEquals('default', p3k\Cache::get('foo', 'default'));
   }
 
