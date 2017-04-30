@@ -84,6 +84,13 @@ function flash($key) {
   }
 }
 
+function http_header_case($str) {
+  $str = str_replace('-', ' ', $str);
+  $str = ucwords($str);
+  $str = str_replace(' ', '-', $str);
+  return $str;
+}
+
 function html_to_dom_document($html) {
   // Parse the source body as HTML
   $doc = new DOMDocument();

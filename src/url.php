@@ -26,8 +26,28 @@ function add_query_params_to_url($url, $add_params) {
   return build_url($parts);
 }
 
+function strip_tracking_params($url) {
+  $parts = parse_url($url);
+  
+  if(!array_key_exists('query', $parts))
+    return $url;
+
+  parse_str($parts['query'], $params);
+
+  $new_params = [];
+
+  foreach($params as $key=>$val) {
+    if(substr($key, 0, 4) != 'utm_')
+      $new_params[$key] = $val;
+  }
+
+  $parts['query'] = http_build_query($new_params);
+
+  return build_url($parts);
+}
+
 // Input: Any URL or string like "aaronparecki.com"
-// Output: Normlized URL (default to http if no scheme, force "/" path)
+// Output: Normalized URL (default to http if no scheme, force "/" path)
 //         or return false if not a valid URL
 function normalize($url) {
   $parts = parse_url($url);
@@ -57,20 +77,16 @@ function normalize($url) {
 // Inverse of parse_url()
 // http://php.net/parse_url
 function build_url($parsed_url) {
-  $scheme   = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';
-  $host     = isset($parsed_url['host']) ? $parsed_url['host'] : '';
-  $port     = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
-  $user     = isset($parsed_url['user']) ? $parsed_url['user'] : '';
-  $pass     = isset($parsed_url['pass']) ? ':' . $parsed_url['pass']  : '';
+  $scheme   = !empty($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';
+  $host     = !empty($parsed_url['host']) ? $parsed_url['host'] : '';
+  $port     = !empty($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
+  $user     = !empty($parsed_url['user']) ? $parsed_url['user'] : '';
+  $pass     = !empty($parsed_url['pass']) ? ':' . $parsed_url['pass']  : '';
   $pass     = ($user || $pass) ? "$pass@" : '';
-  $path     = isset($parsed_url['path']) ? $parsed_url['path'] : '';
-  $query    = isset($parsed_url['query']) ? '?' . $parsed_url['query'] : '';
-  $fragment = isset($parsed_url['fragment']) ? '#' . $parsed_url['fragment'] : '';
+  $path     = !empty($parsed_url['path']) ? $parsed_url['path'] : '';
+  $query    = !empty($parsed_url['query']) ? '?' . $parsed_url['query'] : '';
+  $fragment = !empty($parsed_url['fragment']) ? '#' . $parsed_url['fragment'] : '';
   return "$scheme$user$pass$host$port$path$query$fragment";
-}
-
-function parse($url) {
-  return parse_url($url);
 }
 
 function host_matches($a, $b) {
@@ -79,13 +95,6 @@ function host_matches($a, $b) {
 
 function is_url($url) {
   return is_string($url) && preg_match('/^https?:\/\/[a-z0-9\.\-]\/?/', $url);
-}
-
-function http_header_case($str) {
-  $str = str_replace('-', ' ', $str);
-  $str = ucwords($str);
-  $str = str_replace(' ', '-', $str);
-  return $str;
 }
 
 function is_public_ip($ip) {
