@@ -6,3 +6,5 @@ php:
 - 7.1
 - nightly
 before_script: composer install
+services:
+  - redis-server

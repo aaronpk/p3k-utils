@@ -5,13 +5,18 @@ class Cache {
   private static $redis;
 
   public static function redis($config=false) {
-    if(!isset(self::$redis)) {
+    if(empty(self::$redis)) {
       if($config) {
-        self::$redis = new \Predis\Client(Config::$redis);
+        self::$redis = new \Predis\Client($config);
       } else {
         self::$redis = new \Predis\Client('tcp://127.0.0.1:6379');
       }
     }
+    return self::$redis;
+  }
+
+  public static function reset() {
+    self::$redis = null;
   }
 
   public static function set($key, $value, $exp=600) {
@@ -23,13 +28,13 @@ class Cache {
     }
   }
 
-  public static function get($key) {
+  public static function get($key, $default=null) {
     self::redis();
     $data = self::$redis->get($key);
     if($data) {
       return json_decode($data);
     } else {
-      return null;
+      return $default;
     }
   }
 

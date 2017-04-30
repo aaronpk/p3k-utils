@@ -1,18 +1,25 @@
 <?php
 namespace p3k;
 
+use DOMDocument, IMagick, Exception;
+use Config, ORM;
+
 function redis() {
-  static $client = false;
-  if(!$client)
-    $client = new Predis\Client(Config::$redis);
+  static $client;
+  if(empty($client))
+    $client = new \Predis\Client(class_exists('Config') ? Config::$redis : 'tcp://127.0.0.1:6379');
   return $client;
 }
 
 function bs()
 {
   static $pheanstalk;
-  if(!isset($pheanstalk))
-    $pheanstalk = new Pheanstalk\Pheanstalk(Config::$beanstalkServer, Config::$beanstalkPort);
+  if(empty($pheanstalk)) {
+    if(class_exists('Config'))
+      $pheanstalk = new \Pheanstalk\Pheanstalk(Config::$beanstalkServer, Config::$beanstalkPort);
+    else
+      $pheanstalk = new \Pheanstalk\Pheanstalk('127.0.0.1', 11300);
+  }
   return $pheanstalk;
 }
 
@@ -65,15 +72,15 @@ function str_ends_with($haystack, $needle) {
 function session_setup($create=false, $lifetime=2592000) {
   if($create || isset($_COOKIE[session_name()])) {
     session_set_cookie_params($lifetime);
-    session_start();
+    @session_start();
   }
 }
 
-function session($key) {
-  if(array_key_exists($key, $_SESSION))
+function session($key, $default=null) {
+  if(isset($_SESSION) && array_key_exists($key, $_SESSION))
     return $_SESSION[$key];
   else
-    return null;
+    return $default;
 }
 
 function flash($key) {
@@ -86,7 +93,7 @@ function flash($key) {
 
 function http_header_case($str) {
   $str = str_replace('-', ' ', $str);
-  $str = ucwords($str);
+  $str = ucwords(strtolower($str));
   $str = str_replace(' ', '-', $str);
   return $str;
 }
