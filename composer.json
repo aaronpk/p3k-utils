@@ -23,7 +23,8 @@
       "src/url.php",
       "src/utils.php",
       "src/date.php",
-      "src/cache.php"
+      "src/cache.php",
+      "src/geo.php"
     ]
   },
   "autoload-dev": {

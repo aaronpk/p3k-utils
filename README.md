@@ -7,6 +7,7 @@ This project provides several helpful utilities for working with PHP projects, a
 * `p3k\url` - helpful functions for parsing and building URLs
 * `p3k\cache` - a simple caching helper backed by Redis
 * `p3k\utils` - miscellaneous functions
+* `p3k\geo` - geo functions for calculating distance and other things
 * `p3k\global` - sets the timezone to UTC (you're already storing all your dates in UTC, right?)
 
 PHP Support
