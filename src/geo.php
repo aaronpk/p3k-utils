@@ -21,7 +21,7 @@ function ramerDouglasPeucker($pointList, $epsilon)
     $totalPoints = count($pointList);
     for ($i = 1; $i < ($totalPoints - 1); $i++)
     {
-        $d = $this->_perpendicularDistance($pointList[$i][0], $pointList[$i][1],
+        $d = perpendicularDistance($pointList[$i][0], $pointList[$i][1],
                                    $pointList[0][0], $pointList[0][1],
                                    $pointList[$totalPoints-1][0], $pointList[$totalPoints-1][1]);
 
@@ -38,8 +38,8 @@ function ramerDouglasPeucker($pointList, $epsilon)
     if ($dmax >= $epsilon)
     {
         // Recursive call
-        $recResults1 = $this->_ramerDouglasPeucker(array_slice($pointList, 0, $index + 1), $epsilon);
-        $recResults2 = $this->_ramerDouglasPeucker(array_slice($pointList, $index, $totalPoints - $index), $epsilon);
+        $recResults1 = ramerDouglasPeucker(array_slice($pointList, 0, $index + 1), $epsilon);
+        $recResults2 = ramerDouglasPeucker(array_slice($pointList, $index, $totalPoints - $index), $epsilon);
 
         // Build the result list
         $resultList = array_merge(array_slice($recResults1, 0, count($recResults1) - 1),
