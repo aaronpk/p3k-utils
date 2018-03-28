@@ -122,4 +122,18 @@ class UtilsTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals('Predis\Client', get_class(p3k\redis()));
   }
 
+  public function testBuildQuery() {
+    $params = ['foo'=>['bar','baz']];
+    $body = p3k\http_build_query($params);
+    $this->assertEquals('foo%5B%5D=bar&foo%5B%5D=baz', $body);
+
+    $params = ['a','b','c'];
+    $body = p3k\http_build_query($params);
+    $this->assertEquals('0=a&1=b&2=c', $body);
+
+    $params = ['a'=>'A','b'=>'B'];
+    $body = p3k\http_build_query($params);
+    $this->assertEquals('a=A&b=B', $body);
+  }
+
 }

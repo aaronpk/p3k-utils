@@ -98,6 +98,13 @@ function http_header_case($str) {
   return $str;
 }
 
+function http_build_query($params) {
+  // PHP's built-in http_build_query function encodes arrays with numeric indexes,
+  // like foo[0]=bar&foo[0]=baz
+  // This function removes the numeric indexes so that it's conformant with Micropub
+  return preg_replace('/%5B[0-9]+%5D/', '%5B%5D', \http_build_query($params));
+}
+
 function html_to_dom_document($html) {
   // Parse the source body as HTML
   $doc = new DOMDocument();
@@ -144,19 +151,19 @@ function correct_photo_rotation($filename) {
 }
 
 /**
- * Converts base 10 to base 60. 
+ * Converts base 10 to base 60.
  * http://tantek.pbworks.com/NewBase60
  * @param int $n
  * @return string
- */ 
+ */
 function b10to60($n)
 {
   $s = "";
   $m = "0123456789ABCDEFGHJKLMNPQRSTUVWXYZ_abcdefghijkmnopqrstuvwxyz";
-  if ($n==0) 
-    return 0; 
+  if ($n==0)
+    return 0;
 
-  while ($n>0) 
+  while ($n>0)
   {
     $d = $n % 60;
     $s = $m[$d] . $s;
@@ -176,7 +183,7 @@ function b60to10($s)
   $n = 0;
   for($i = 0; $i < strlen($s); $i++) // iterate from first to last char of $s
   {
-    $c = ord($s[$i]); //  put current ASCII of char into $c  
+    $c = ord($s[$i]); //  put current ASCII of char into $c
     if ($c>=48 && $c<=57) { $c=$c-48; }
     else if ($c>=65 && $c<=72) { $c-=55; }
     else if ($c==73 || $c==108) { $c=1; } // typo capital I, lowercase l to 1
