@@ -28,6 +28,6 @@
     ]
   },
   "scripts": {
-    "test": "vendor/bin/phpunit"
+    "test": "vendor/bin/phpunit --testsuite unit"
   }
 }
