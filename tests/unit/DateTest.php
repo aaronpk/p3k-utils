@@ -1,5 +1,5 @@
 <?php
-class DateTest extends PHPUnit_Framework_TestCase {
+class DateTest extends \PHPUnit\Framework\TestCase {
 
   public function testFormatLocalPositiveOffset() {
     $local = p3k\date\format_local('c', '2017-05-01T13:30:00+0000', 7200);

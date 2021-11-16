@@ -1,5 +1,5 @@
 <?php
-class UtilsTest extends PHPUnit_Framework_TestCase {
+class UtilsTest extends \PHPUnit\Framework\TestCase {
 
   public function testRandomString() {
     $str1 = p3k\random_string(20);

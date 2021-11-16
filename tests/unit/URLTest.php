@@ -1,5 +1,5 @@
 <?php
-class URLTest extends PHPUnit_Framework_TestCase {
+class URLTest extends \PHPUnit\Framework\TestCase {
 
   public function testDisplayURL() {
     $url = p3k\url\display_url('http://example.com');

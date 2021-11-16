@@ -1,5 +1,5 @@
 <?php
-class CacheTest extends PHPUnit_Framework_TestCase {
+class CacheTest extends \PHPUnit\Framework\TestCase {
 
   public function testCreateFromConfig() {
     p3k\Cache::redis('tcp://127.0.0.1:6379');
