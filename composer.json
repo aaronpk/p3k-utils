@@ -27,6 +27,7 @@
       "src/geo.php"
     ]
   },
-  "autoload-dev": {
+  "scripts": {
+    "test": "vendor/bin/phpunit"
   }
 }
