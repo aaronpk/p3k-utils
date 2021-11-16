@@ -12,6 +12,12 @@ class URLTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals('example.com/foo', $url);
     $url = p3k\url\display_url('http://example.com/foo/');
     $this->assertEquals('example.com/foo/', $url);
+    $url = p3k\url\display_url('http://www.example.com/foo/');
+    $this->assertEquals('example.com/foo/', $url);
+    $url = p3k\url\display_url('https://www.example.com/foo/');
+    $this->assertEquals('example.com/foo/', $url);
+    $url = p3k\url\display_url('https://example.www.example.com/foo/');
+    $this->assertEquals('example.www.example.com/foo/', $url);
   }
 
   public function testAddQueryParamsToURLNoExistingParams() {

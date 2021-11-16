@@ -2,8 +2,8 @@
 namespace p3k\url;
 
 function display_url($url) {
-  # remove scheme
-  $url = preg_replace('/^https?:\/\//', '', $url);
+  # remove scheme and www.
+  $url = preg_replace('/^https?:\/\/(www\.)?/', '', $url);
   # if the remaining string has no path components but has a trailing slash, remove the trailing slash
   $url = preg_replace('/^([^\/]+)\/$/', '$1', $url);
   return $url;
