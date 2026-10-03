@@ -98,6 +98,24 @@ class UtilsTest extends \PHPUnit\Framework\TestCase {
     $this->assertEmpty(libxml_get_errors());
   }
 
+  public function testHTMLToDomDocumentPreservesNonASCII() {
+    $doc = p3k\html_to_dom_document('<p>Café 日本語 🚀</p>');
+    $this->assertEquals('Café 日本語 🚀', $doc->getElementsByTagName('p')->item(0)->textContent);
+  }
+
+  public function testHTMLToDomDocumentDropsInvalidBytes() {
+    $substitute = mb_substitute_character();
+    $doc = p3k\html_to_dom_document("<p>caf\xe9 ok</p>");
+    $this->assertEquals('caf ok', $doc->getElementsByTagName('p')->item(0)->textContent);
+    $this->assertEquals($substitute, mb_substitute_character());
+  }
+
+  public function testHTMLToDomDocumentEmptyString() {
+    $doc = p3k\html_to_dom_document('');
+    $this->assertEquals('DOMDocument', get_class($doc));
+    $this->assertNull($doc->documentElement);
+  }
+
   public function testXMLToDomDocument() {
     $doc = p3k\xml_to_dom_document('<html><head><title>Title</title></head><body>Hello World</body></html>');
     $this->assertEquals('DOMDocument', get_class($doc));

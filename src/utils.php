@@ -109,8 +109,21 @@ function html_to_dom_document($html) {
   // Parse the source body as HTML
   $doc = new DOMDocument();
   libxml_use_internal_errors(true); # suppress parse errors and warnings
-  $body = mb_convert_encoding($html, 'HTML-ENTITIES', mb_detect_encoding($html));
-  @$doc->loadHTML($body, LIBXML_NOWARNING|LIBXML_NOERROR);
+  # loadHTML assumes ISO-8859-1 unless the document says otherwise, so encode
+  # everything outside ASCII as numeric entities. This used to be done with the
+  # HTML-ENTITIES pseudo-encoding, which is deprecated as of PHP 8.2.
+  # Invalid byte sequences are dropped, as they were before.
+  $substitute = mb_substitute_character();
+  mb_substitute_character('none');
+  try {
+    $encoding = mb_detect_encoding($html) ?: 'UTF-8';
+    $body = mb_encode_numericentity(mb_convert_encoding($html, 'UTF-8', $encoding), [0x80, 0x10FFFF, 0, 0x1FFFFF], 'UTF-8');
+  } finally {
+    mb_substitute_character($substitute);
+  }
+  # loadHTML throws on an empty string as of PHP 8
+  if($body !== '')
+    @$doc->loadHTML($body, LIBXML_NOWARNING|LIBXML_NOERROR);
   libxml_clear_errors();
   return $doc;
 }
